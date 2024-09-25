@@ -28,7 +28,7 @@ const Home = () => {
 
   return (
     <View style={styles.container}>
-      <Button title="Sign New Feature added" onPress={() => router.push('(auth)/sign-in')} />
+      <Button title="Sign In" onPress={() => router.push('(auth)/sign-in')} />
         
       <FlatList
         data={products}
