@@ -9,7 +9,7 @@ export default function Page(){
         <View style={{flex:1, justifyContent:'center', alignItems:'center'}}>
             <Text>Home Page is this</Text>
             <Link href="/home" asChild>
-                <Button title="Open home" />
+                <Button title="Open home +in new features" />
             </Link>
         </View>
     )
