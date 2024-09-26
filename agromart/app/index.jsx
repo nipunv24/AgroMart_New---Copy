@@ -7,9 +7,9 @@ import { StatusBar } from 'expo-status-bar'
 export default function Page(){
     return(
         <View style={{flex:1, justifyContent:'center', alignItems:'center'}}>
-            <Text>Home Page is this</Text>
+            <Text>Home Page</Text>
             <Link href="/home" asChild>
-                <Button title="Open home +in new features" />
+                <Button title="Open Agromart" />
             </Link>
         </View>
     )

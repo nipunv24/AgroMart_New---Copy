@@ -1,67 +1,60 @@
-import React, { useState } from 'react';
-import { View, TextInput, Button, Text, StyleSheet } from 'react-native';
-import axios from 'axios';
-import { useRouter } from 'expo-router'; // Import useRouter
+import { useSignIn } from '@clerk/clerk-expo';
+import { Link, useRouter } from 'expo-router';
+import { Text, TextInput, Button, View } from 'react-native';
+import React, { useState, useCallback } from 'react';
 
-const SignIn = () => {
-  const router = useRouter(); // Use the router
-  const [email, setEmail] = useState('');
+export default function Page() {
+  const { signIn, setActive, isLoaded } = useSignIn();
+  const router = useRouter();
+
+  const [emailAddress, setEmailAddress] = useState('');
   const [password, setPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
 
-  const handleSignIn = async () => {
+  const onSignInPress = useCallback(async () => {
+    if (!isLoaded) {
+      return;
+    }
+
     try {
-      const response = await axios.post('http://172.20.10.4:3000/signin', {
-        email,
+      const signInAttempt = await signIn.create({
+        identifier: emailAddress,
         password,
       });
-      alert(response.data.message);
-      // Save token and navigate to the profile or home screen
-      // You can use AsyncStorage to store the token
-      router.push('/profile'); // Use router.push to navigate to the Profile screen
-    } catch (error) {
-      setErrorMessage(error.response?.data?.error || 'Failed to sign in');
+
+      if (signInAttempt.status === 'complete') {
+        await setActive({ session: signInAttempt.createdSessionId });
+        router.replace('/');
+      } else {
+        // See https://clerk.com/docs/custom-flows/error-handling
+        // for more info on error handling
+        console.error(JSON.stringify(signInAttempt, null, 2));
+      }
+    } catch (err) {
+      console.error(JSON.stringify(err, null, 2));
     }
-  };
+  }, [isLoaded, emailAddress, password]);
 
   return (
-    <View style={styles.container}>
+    <View>
       <TextInput
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-        style={styles.input}
+        autoCapitalize="none"
+        value={emailAddress}
+        placeholder="Email..."
+        onChangeText={(emailAddress) => setEmailAddress(emailAddress)}
       />
       <TextInput
-        placeholder="Password"
         value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-        style={styles.input}
+        placeholder="Password..."
+        secureTextEntry={true}
+        onChangeText={(password) => setPassword(password)}
       />
-      {errorMessage ? <Text style={styles.error}>{errorMessage}</Text> : null}
-      <Button title="Sign In" onPress={handleSignIn} />
-      <Button title="Sign Up" onPress ={() => router.push('sign-up')} />
+      <Button title="Sign In" onPress={onSignInPress} />
+      <View>
+        <Text>Don't have an account?</Text>
+        <Link href="/sign-up">
+          <Text>Sign up</Text>
+        </Link>
+      </View>
     </View>
   );
-};
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    padding: 16,
-  },
-  input: {
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginBottom: 12,
-    paddingLeft: 8,
-  },
-  error: {
-    color: 'red',
-  },
-});
-
-export default SignIn;
+}
