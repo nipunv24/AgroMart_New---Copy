@@ -11,7 +11,7 @@ const Home = () => {
 
   useEffect(() => {
     // Fetch data from the backend
-    axios.get('http://172.20.10.4:3000/products') // Change to your server URL
+    axios.get('http://192.168.43.3:3000/products') // Change to your server URL
       .then(response => {
         setProducts(response.data);
         setLoading(false); // Data has been fetched, stop loading

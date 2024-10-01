@@ -62,28 +62,31 @@
 
 // export default TabsLayout;
 
-import { View, Text } from 'react-native'
-import React from 'react'
-import { Tabs } from 'expo-router'
+import { View, Text } from 'react-native';
+import React from 'react';
+import { Tabs } from 'expo-router';
+import TabBar from "../../.components/TabBar"
 
 export default function _layout() {
   return (
-    <Tabs>
+    <Tabs
+      tabBar={props => <TabBar {...props}/>}
+    >
         <Tabs.Screen name="home" options={{
-            headerTitle: "Home",
-            tabBarLabel: 'Home'
+             headerShown: false,
+             title:"Home"
         }} />
         <Tabs.Screen name="notifications" options={{
-            headerTitle: "Notifications",
+            headerShown: false,
             tabBarLabel: 'Notifications'
         }}/>
         <Tabs.Screen name="cart" options={{
-          headerTitle: "Cart",
+          headerShown: false,
           tabBarLabel: 'Cart'
         }}
         />
         <Tabs.Screen name="profile" options={{
-          headerTitle: "Profile",
+          headerShown: false,
           tabBarLabel: 'Profile'
         }}
         />
