@@ -12,7 +12,7 @@ export default function Page() {
       </SignedIn>
       <SignedOut>
         <Link href="/(auth)/sign-in">
-          <Text>Sign In</Text>
+          <Text>Sign In to page</Text>
         </Link>
         <Link href="/(auth)/sign-up">
           <Text>Sign Up</Text>
