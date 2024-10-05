@@ -26,7 +26,7 @@ export default function Page() {
       <SignedOut>
         <View className="items-center justify-center p-6" style={{ marginTop: '50%' }}>
           <Text className="text-2xl font-bold text-center mb-8">
-            Create an account or Sign-In!
+            Create an account or Sign-In to!
           </Text>
           <Link href="/(auth)/sign-in" asChild>
             <TouchableOpacity className="bg-green-500 py-2 px-8 mt-4 rounded-full mb-4 w-full h-14 justify-center" activeOpacity={0.9}>
