@@ -12,7 +12,7 @@ export default function _layout() {
       <Tabs.Screen
         name="home"
         options={{
-          headerShown: true, // Show the header for this screen
+          headerShown: false, // Show the header for this screen
           headerTitle: "Agromart", // Set the header title to "Agromart"
           title: "Home", // Tab bar label
         }}
@@ -20,7 +20,7 @@ export default function _layout() {
       <Tabs.Screen
         name="notifications"
         options={{
-          headerShown: true, // Show the header for this screen
+          headerShown: false, // Show the header for this screen
           headerTitle: "Agromart", // Set the header title to "Agromart"
           tabBarLabel: "Notifications", // Tab bar label
         }}
@@ -28,7 +28,7 @@ export default function _layout() {
       <Tabs.Screen
         name="cart"
         options={{
-          headerShown: true, // Show the header for this screen
+          headerShown: false, // Show the header for this screen
           headerTitle: "Agromart", // Set the header title to "Agromart"
           tabBarLabel: "Cart", // Tab bar label
         }}
@@ -36,7 +36,7 @@ export default function _layout() {
       <Tabs.Screen
         name="profile"
         options={{
-          headerShown: true, // Show the header for this screen
+          headerShown: false, // Show the header for this screen
           headerTitle: "Agromart", // Set the header title to "Agromart"
           tabBarLabel: "Profile", // Tab bar label
         }}
