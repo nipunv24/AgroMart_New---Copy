@@ -13,27 +13,31 @@
 
 import { SignedIn, SignedOut, useUser } from '@clerk/clerk-expo'
 import { Link } from 'expo-router'
-import { Text, View,TouchableOpacity } from 'react-native';
+import { Text, View,TouchableOpacity, Image, StyleSheet } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import LoadingIndicator from '../../.components/LoadingIndicator';
+//import { DOMAIN_URL } from 'react-native-dotenv'; // Import DOMAIN_URL from .env
 
 export default function Page() {
   const { user } = useUser()
   const {productId} = useLocalSearchParams();
   console.log("this is",productId);
-  const [products, setProducts] = useState([]);
+  const [product, setProduct] = useState([]);
   const [loading, setLoading] = useState(true); // State to track loading status
   const [isPressed, setIsPressed] = useState(false); //For the button to show green colour
+
+  const mainCat = 
 
 
   useEffect(() => {
     // Fetch data from the backend
-    axios.get('http://10.10.24.163:3000/products/getProduct', {
+    axios.get(`http://10.10.24.163:3000/products/getProduct`, {
         params: {productId}
     }) // Change to your server URL
       .then(response => {
-        setProducts(response.data);
+        setProduct(response.data);
         setLoading(false); // Data has been fetched, stop loading
       })
       .catch(error => {
@@ -42,29 +46,105 @@ export default function Page() {
       });
   }, []);
 
+
+  if (loading) {
+    return <LoadingIndicator />; // Show loading indicator while data is being fetched
+  }
+
   return (
 
-    <View>
-      <SignedIn>
-        <Text>Hello {user?.emailAddresses[0].emailAddress}</Text>
-      </SignedIn>
-      <SignedOut>
-        <View className="items-center justify-center p-6" style={{ marginTop: '50%' }}>
-          <Text className="text-2xl font-bold text-center mb-8">
-            Create an account or Sign-In! {productId}
-          </Text>
-          <Link href="/(auth)/sign-in" asChild>
-            <TouchableOpacity className="bg-green-500 py-2 px-8 mt-4 rounded-full mb-4 w-full h-14 justify-center" activeOpacity={0.9}>
-              <Text className="text-white text-lg font-semibold text-center">Sign In</Text>
-            </TouchableOpacity>
-          </Link>
-          <Link href="/(auth)/sign-up" asChild>
-            <TouchableOpacity className="bg-green-600 py-2 px-16 mt-8 rounded-full w-full h-14 justify-center" activeOpacity={0.9}>
-              <Text className="text-white text-lg font-semibold text-center">Sign Up</Text>
-            </TouchableOpacity>
-          </Link>
-        </View>
-      </SignedOut>
+    <View className='flex-1 items-center justify-center'>
+        <Image source={{ uri: product.imageUrls[0].url }} style={{ width: 200, height: 200 }} />
+        <Text>{product.mainCategory}</Text>
+        <Text>{product.name}</Text>
+        <Text>{product.price}</Text>
+        {product.discount > 0 && (
+          <View>
+            <Text>{product.discount}%</Text>
+          </View>
+        )}
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  card: {
+    width: 220,
+    height: 300,
+    backgroundColor: '#D1FAE5',
+    borderRadius: 8,
+    padding: 5,
+    marginBottom: 20,
+    elevation: 3,
+    marginRight: 10
+  },
+  header: {
+    position: 'relative',
+  },
+  discountTag: {
+    position: 'absolute',
+    top: 10,
+    left: 10,
+    backgroundColor: '#047857',
+    padding: 5,
+    borderRadius: 50,
+  },
+  discountText: {
+    color: '#fff',
+    fontSize: 16,
+    fontStyle: 'italic',
+  },
+  productImage: {
+    width: '100%',
+    height: 200,
+    borderRadius: 8,
+    resizeMode: 'cover',
+  },
+  actionIcons: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'absolute',
+    bottom: 10,
+    width: '100%',
+  },
+  productName: {
+    fontSize: 16,
+    fontWeight: '500',
+    marginTop: 10,
+    marginBottom: 5,
+  },
+  ratingAndSold: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 5,
+  },
+  soldText: {
+    fontSize: 12,
+    color: '#6B7280',
+    marginLeft: 10,
+  },
+  priceContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  price: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#000',
+  },
+  strikedPrice: {
+    textDecorationLine: 'line-through',
+    fontSize: 14,
+    color: '#9CA3AF',
+    fontStyle: 'italic',
+  },
+  discountPrice: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#000',
+    marginLeft: 10,
+  },
+});
+
+//Create an account or Sign-In! {productId}

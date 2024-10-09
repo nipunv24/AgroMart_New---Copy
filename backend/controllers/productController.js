@@ -88,3 +88,26 @@ export const getProduct = async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
+
+
+
+export const getSameCatProduct = async (req, res) => {  //Created with intention of fethcing catergory, but sometimes might not need it.
+  const { productId } = req.query;
+  console.log("Product is "+productId);
+    try {
+      const product = await prisma.product.findUnique({
+        where: {
+          id:productId
+        },
+        include:{
+          category:true,
+          reviews:true
+        }
+      });
+    console.log("Inside get product",product);
+    res.json(product);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};

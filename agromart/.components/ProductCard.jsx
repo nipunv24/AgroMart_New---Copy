@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, Image, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 // import StarRating from 'react-native-star-rating';
 // import Icon from 'react-native-vector-icons/MaterialIcons';
 // import useCart from '@/hooks/addtocardStore';
@@ -7,7 +7,11 @@ import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 // import usePreviewModal from '@/hooks/usePreviewModal';
 import { useNavigation } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
+// import { StarRatingDisplay } from 'react-native-star-rating-widget';
 
+
+
+const screenWidth = Dimensions.get('window').width;
 
 const ProductCard = ({ product }) => {
   // // const [isMounted, setIsMounted] = useState(false);
@@ -16,7 +20,7 @@ const ProductCard = ({ product }) => {
   // const previewModal = usePreviewModal();
   // const navigation = useNavigation();
   const router = useRouter();
-
+ 
   // useEffect(() => {
   //   setIsMounted(true);
   // }, []);
@@ -32,6 +36,8 @@ const ProductCard = ({ product }) => {
     const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
     return totalRating / reviews.length;
   };
+
+  rating = calculateRating();
 
   // Add product to cart
 //   const onAddToCart = (event) => {
@@ -90,7 +96,9 @@ const ProductCard = ({ product }) => {
           starSize={15}
           fullStarColor="orange"
         /> */}
+         
         <Text style={styles.soldText}>{product.orderIds.length}+ sold</Text>
+        <Text>Rating: {rating.toFixed(1)}</Text>
       </View>
       <View style={styles.priceContainer}>
         <Text style={[styles.price, product.discount > 0 && styles.strikedPrice]}>
@@ -104,12 +112,14 @@ const ProductCard = ({ product }) => {
 
 const styles = StyleSheet.create({
   card: {
-    width: 220,
+    width: screenWidth * 0.42,
+    height: 300,
     backgroundColor: '#D1FAE5',
     borderRadius: 8,
-    padding: 10,
+    padding: 5,
     marginBottom: 20,
     elevation: 3,
+    marginRight: 10
   },
   header: {
     position: 'relative',
