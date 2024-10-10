@@ -54,7 +54,7 @@ export default function Page() {
         onChangeText={(password) => setPassword(password)}
       />
       <TouchableOpacity
-        className="bg-[#4CAF50] rounded-full py-3 shadow-md mb-5 mt-5"
+        className="bg-[#1c771f] rounded-full py-3 shadow-md mb-5 mt-5"
         onPress={onSignInPress}
       >
         <Text className="text-white text-center font-bold text-lg">Sign In</Text>

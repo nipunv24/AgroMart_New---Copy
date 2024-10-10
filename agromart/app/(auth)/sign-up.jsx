@@ -75,7 +75,7 @@ export default function SignUpScreen() {
             placeholderTextColor="#256509" // Match Sign In placeholder
             onChangeText={(password) => setPassword(password)}
           />
-          <TouchableOpacity className="bg-[#4CAF50] rounded-full py-3 shadow-md mb-5 mt-5" onPress={onSignUpPress}>
+          <TouchableOpacity className="bg-[#1c771f] rounded-full py-3 shadow-md mb-5 mt-5" onPress={onSignUpPress}>
             <Text className="text-white font-bold text-lg text-center">Sign Up</Text>
           </TouchableOpacity>
         </>

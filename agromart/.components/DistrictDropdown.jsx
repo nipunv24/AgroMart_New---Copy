@@ -1,31 +1,63 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
 
-const CategoryDropdown = ({ categories }) => {
+
+const districtsOfSriLanka = [
+    "Ampara",
+    "Anuradhapura",
+    "Badulla",
+    "Batticaloa",
+    "Colombo",
+    "Galle",
+    "Gampaha",
+    "Hambantota",
+    "Jaffna",
+    "Kalutara",
+    "Kandy",
+    "Kegalle",
+    "Kilinochchi",
+    "Kurunegala",
+    "Mannar",
+    "Matale",
+    "Matara",
+    "Monaragala",
+    "Mullaitivu",
+    "Nuwara Eliya",
+    "Polonnaruwa",
+    "Puttalam",
+    "Ratnapura",
+    "Trincomalee",
+    "Vavuniya"
+];
+
+
+const DistrictDropdown = () => {
   const [isOpen, setIsOpen] = useState(false); // To toggle the dropdown list
-  const [selectedCategory, setSelectedCategory] = useState('Select Category'); // To display selected category
+  const [selectedDistrict, setSelectedDistrict] = useState('Select District'); // To display selected district
+
 
   // Function to handle category selection
-  const handleCategorySelect = (categoryName) => {
-    setSelectedCategory(categoryName);
+  const handleDistrictSelect = (districtName) => {
+    setSelectedDistrict(districtName);
     setIsOpen(false); // Close the dropdown after selecting
   };
+
 
   return (
     <View style={styles.container}>
       {/* Text box to display the selected category */}
       <TouchableOpacity onPress={() => setIsOpen(!isOpen)} style={styles.dropdown}>
-        <Text style={styles.selectedText}>{selectedCategory}</Text>
+        <Text style={styles.selectedText}>{selectedDistrict}</Text>
       </TouchableOpacity>
 
       {/* Dropdown list - only displayed when isOpen is true */}
       {isOpen && (
         <FlatList
-          data={categories}
+          data={districtsOfSriLanka}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
-            <TouchableOpacity onPress={() => handleCategorySelect(item.name)} style={styles.item}>
-              <Text style={styles.itemText}>{item.name}</Text>
+            <TouchableOpacity onPress={() => handleDistrictSelect(item)} style={styles.item}>
+              <Text style={styles.itemText}>{item}</Text>
             </TouchableOpacity>
           )}
           style={styles.list}
@@ -52,7 +84,7 @@ const styles = StyleSheet.create({
   },
   list: {
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: 'green',
     borderRadius: 5,
     marginTop: 5,
     maxHeight: 150, // Ensure there's enough space for the dropdown
@@ -68,4 +100,5 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CategoryDropdown;
+export default DistrictDropdown;
+

@@ -13,6 +13,32 @@ export const getCategories = async (req, res) => {
   }
 };
 
+export const getDistricts = async (req, res) => {
+  try {
+    // Fetch distinct district names from the Store model
+    const districts = await prisma.store.findMany({
+      select: {
+        district: true,
+      },
+      where: {
+        district: {
+          not: null, // Exclude null values if necessary
+        },
+      },
+      distinct: ['district'], // Ensures unique district names
+    });
+
+    // Extract district names from the result
+    const districtNames = districts.map(store => store.district).filter(Boolean);
+
+    res.json(districtNames);
+  } catch (error) {
+    console.error('Error fetching districts:', error);
+    res.status(500).json({ error: 'Error fetching districts' });
+  }
+};
+
+
 // Fetch all products
 export const getProducts = async (req, res) => {
   try {
@@ -29,14 +55,16 @@ export const getProducts = async (req, res) => {
       orderBy: {
         discount: 'desc', 
       },
-      take: 10, 
+      // take: 10, 
     });
     res.json(products);
   } catch (error) {
     console.error('Error fetching products:', error);
-    res.status(500).json({ error: 'Failed to fetch products' });
+    res.status(500).json({ error: 'Error in fetching a all products at once(getProducts function)' });
   }
 };
+
+
 
 
 
@@ -67,7 +95,10 @@ export const searchProducts = async (req, res) => {
 };
 
 
-// Search for products based on filters
+
+
+
+// Getting data related to a single product.
 export const getProduct = async (req, res) => {
   const { productId } = req.query;
   console.log("Product is "+productId);
@@ -85,29 +116,25 @@ export const getProduct = async (req, res) => {
     res.json(product);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({ error: 'Error in fetching a single product(getProduct function)' });
   }
 };
 
 
 
-export const getSameCatProduct = async (req, res) => {  //Created with intention of fethcing catergory, but sometimes might not need it.
+//getting Reviews related to a certain product
+export const getReviews = async (req, res) => {
   const { productId } = req.query;
-  console.log("Product is "+productId);
+  console.log("ProductId needed for getReviews function is "+productId);
     try {
-      const product = await prisma.product.findUnique({
-        where: {
-          id:productId
-        },
-        include:{
-          category:true,
-          reviews:true
+      const reviews = await prisma.review.findMany({
+        where:{
+            productId
         }
       });
-    console.log("Inside get product",product);
-    res.json(product);
+    res.json(reviews);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({ error: 'Error in fetching reviews(getReviews function)' });
   }
 };

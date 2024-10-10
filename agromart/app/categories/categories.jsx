@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView, FlatList, StyleSheet } from 'react-native';
 import axios from 'axios';
 import CategoryDropdown from '../../.components/CategoryDropdown';
+import DistrictDropdown from '../../.components/DistrictDropdown';
 
 const Categories = () => {
   const [categories, setCategories] = useState([]);
@@ -12,30 +13,49 @@ const Categories = () => {
   const [maxPrice, setMaxPrice] = useState('');
   const [products, setProducts] = useState([]);
 
+
+
   useEffect(() => {
-    // Fetch categories
-    const fetchCategories = async () => {
-      try {
-        const response = await axios.get('http://localhost:3000/products/categories');
+    // Fetch data from the backend
+    axios.get(`http://192.168.43.3:3000/products/categories`) // Change to your server URL
+      .then(response => {
         setCategories(response.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
+        setLoading(false); // Data has been fetched, stop loading
+      })
+      .catch(error => {
+        console.error('Failed to fetch categories:', error);
+        setLoading(false); // Stop loading even if there's an error
+      });
+  }, []);
+
+
+  //useEffect to fetch the districts
+  useEffect(() => {
+    // Fetch data from the backend
+    axios.get(`http://192.168.43.3:3000/products/districts`) // Change to your server URL
+      .then(response => {
+        setDistricts(response.data);
+        setLoading(false); // Data has been fetched, stop loading
+      })
+      .catch(error => {
+        console.error('Failed to fetch categories:', error);
+        setLoading(false); // Stop loading even if there's an error
+      });
+  }, []);
 
     // Fetch districts (if you have a District model)
-    const fetchDistricts = async () => {
-      try {
-        const response = await axios.get('http://localhost:3000/products/districts');
-        setDistricts(response.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
+  //   const fetchDistricts = async () => {
+  //     try {
+  //       const response = await axios.get('http://localhost:3000/products/districts');
+  //       setDistricts(response.data);
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //   };
 
-    fetchCategories();
-    fetchDistricts();
-  }, []);
+  //   fetchCategories();
+  //   fetchDistricts();
+  // }, []);
 
   const handleSearch = async () => {
     try {
@@ -58,19 +78,14 @@ const Categories = () => {
         <Text>Category:</Text>
         <CategoryDropdown categories={categories}/>
       </View>
+
+
       {/* District Dropdown */}
-      <Text>District:</Text>
-      <TouchableOpacity
-        onPress={() => {/* Logic to display district dropdown */}}
-        style={{ padding: 10, backgroundColor: '#eaeaea', marginVertical: 10 }}
-      >
-        <Text>{selectedDistrict || 'Select District'}</Text>
-      </TouchableOpacity>
-      {districts.map((district) => (
-        <TouchableOpacity key={district.id} onPress={() => setSelectedDistrict(district.id)}>
-          <Text>{district.name}</Text>
-        </TouchableOpacity>
-      ))}
+      <View className=' mb-5'>
+        <Text>District:</Text>
+        <DistrictDropdown/>
+      </View>
+      
 
       {/* Price Range Inputs */}
       <Text>Price Range:</Text>

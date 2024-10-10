@@ -1,32 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
-// import StarRating from 'react-native-star-rating';
-// import Icon from 'react-native-vector-icons/MaterialIcons';
-// import useCart from '@/hooks/addtocardStore';
-// import watchCart from '@/hooks/watchlistStore';
-// import usePreviewModal from '@/hooks/usePreviewModal';
 import { useNavigation } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
-// import { StarRatingDisplay } from 'react-native-star-rating-widget';
-
+import RatingDisplayStarsOnly from './RatingDisplayStarsOnly';
 
 
 const screenWidth = Dimensions.get('window').width;
 
 const ProductCard = ({ product }) => {
-  // // const [isMounted, setIsMounted] = useState(false);
-  // const cart = useCart();
-  // const watchlist = watchCart();
-  // const previewModal = usePreviewModal();
-  // const navigation = useNavigation();
-  const router = useRouter();
- 
-  // useEffect(() => {
-  //   setIsMounted(true);
-  // }, []);
 
   // Calculate discount price
-  const discountPrice = product.price - (product.price * product.discount) / 100;
+  const discountPrice = (product.price - (product.price * product.discount) / 100).toFixed(2);
 
   // Calculate rating
   const calculateRating = () => {
@@ -36,70 +20,55 @@ const ProductCard = ({ product }) => {
     const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
     return totalRating / reviews.length;
   };
-
   rating = calculateRating();
 
-  // Add product to cart
-//   const onAddToCart = (event) => {
-//     event.stopPropagation();
-//     cart.addItem(product);
-//   };
-
-//   // Add product to watchlist
-//   const onAddToWatchlist = (event) => {
-//     event.stopPropagation();
-//     watchlist.addItem(product);
-//   };
-
-//   // Open preview modal
-//   const preview = (event) => {
-//     event.stopPropagation();
-//     previewModal.open(product);
-//   };
 
   // Navigate to product detail page
+  const router = useRouter();
   const goToProductPage = (productId) => {
     router.push(`product/${productId}`);
   };
 
-  // if (!isMounted) return null;
+
+  //Used a useState and placeholder image to prevent errors if image not uploaded.
+  const [imageUri, setImageUri] = useState(product?.imageUrls?.[0]?.url);
+  const placeholderImage = "https://upload.wikimedia.org/wikipedia/commons/a/a3/Image-not-found.png";
+
+
 
   return (
     <TouchableOpacity style={styles.card} onPress={() => goToProductPage(product.id)}>
+
+      {/* ImageDisplay */}
       <View style={styles.header}>
-        {product.discount > 0 && (
+        {/* ImageDisplay */}
+        <Image
+          source={{ uri: imageUri || placeholderImage }}
+          onError={() => setImageUri(placeholderImage)}
+          style={styles.productImage}
+        />
+      </View>
+
+      {/* ProductName Display */}
+      <Text style={styles.productName} numberOfLines={1}>
+        {product.name}
+      </Text>
+
+
+      {/* DiscountTag Display */}
+      {product.discount > 0 && (
           <View style={styles.discountTag}>
             <Text style={styles.discountText}>{product.discount}%</Text>
           </View>
         )}
-        <Image source={{ uri: product.imageUrls[0].url }} style={styles.productImage} />
-        <View style={styles.actionIcons}>
-          {/* <TouchableOpacity onPress={preview}>
-            <Icon name="zoom-in" size={20} color="gray" />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={onAddToCart}>
-            <Icon name="shopping-cart" size={20} color="gray" />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={onAddToWatchlist}>
-            <Icon name="bookmark" size={20} color="gray" />
-          </TouchableOpacity> */}
-        </View>
-      </View>
-      <Text style={styles.productName} numberOfLines={1}>
-        {product.name}
-      </Text>
-      <View style={styles.ratingAndSold}>
-        {/* <StarRating
-          disabled={true}
-          maxStars={5}
-          rating={calculateRating()}
-          starSize={15}
-          fullStarColor="orange"
-        /> */}
-         
+
+      {/* SoldAmount and Rating Display */}
+      <View style={styles.ratingAndSold}>  
         <Text style={styles.soldText}>{product.orderIds.length}+ sold</Text>
-        <Text>Rating: {rating.toFixed(1)}</Text>
+        <RatingDisplayStarsOnly rating={rating}/>
       </View>
+
+      {/* Initial and Discounted Price Display */}
       <View style={styles.priceContainer}>
         <Text style={[styles.price, product.discount > 0 && styles.strikedPrice]}>
           ${product.price}
@@ -128,7 +97,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 10,
     left: 10,
-    backgroundColor: '#047857',
+    backgroundColor: 'green',
     padding: 5,
     borderRadius: 50,
   },
@@ -166,6 +135,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#6B7280',
     marginLeft: 10,
+    marginRight: 10,
   },
   priceContainer: {
     flexDirection: 'row',
@@ -185,7 +155,8 @@ const styles = StyleSheet.create({
   discountPrice: {
     fontSize: 18,
     fontWeight: '700',
-    color: '#000',
+    //color: '#000',
+    color:'brown',
     marginLeft: 10,
   },
 });

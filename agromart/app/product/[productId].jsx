@@ -1,40 +1,65 @@
-// import { router } from "expo-router";
-// import { View, Text, Button } from "react-native";
-
-// const Cart = () => {
-//    return(
-//     <View>
-//         <Text>Cart Page</Text>
-//         <Button title="Sign In" onPress={() => router.push('(auth)/sign-in')} />
-//     </View>
-//    );
-// };
-// export default Cart;
-
-import { SignedIn, SignedOut, useUser } from '@clerk/clerk-expo'
-import { Link } from 'expo-router'
-import { Text, View,TouchableOpacity, Image, StyleSheet } from 'react-native';
-import { useLocalSearchParams } from 'expo-router';
+import { SignedIn, SignedOut, useUser } from '@clerk/clerk-expo';
+import { Link } from 'expo-router';
+import { Text, View, Image, ScrollView, Dimensions, SafeAreaView } from 'react-native';
+import { useLocalSearchParams, useRouter} from 'expo-router';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import LoadingIndicator from '../../.components/LoadingIndicator';
-//import { DOMAIN_URL } from 'react-native-dotenv'; // Import DOMAIN_URL from .env
+import RatingDisplay from '../../.components/RatingDisplay';
+import ButtonInProduct from './components/ButtonInProduct';
+import Reviews from './components/Reviews';
+
+
+
 
 export default function Page() {
-  const { user } = useUser()
-  const {productId} = useLocalSearchParams();
-  console.log("this is",productId);
+  const { user } = useUser();
+  const { productId } = useLocalSearchParams();
+  console.log("this is", productId);
   const [product, setProduct] = useState([]);
   const [loading, setLoading] = useState(true); // State to track loading status
-  const [isPressed, setIsPressed] = useState(false); //For the button to show green colour
-
-  const mainCat = 
 
 
+  //Getting Discount Price
+  const discountPrice = (product.price - (product.price * product.discount) / 100).toFixed(2);
+
+
+  //Function to redirect to cart page when "Add to Cart" button is clicked.
+  const router = useRouter();
+  const goToCart = () => {
+    router.push('(tabs)/cart');
+  }
+
+
+
+
+  //Function to redirect to notifications page when "Contact seller is pressed" button is clicked.
+  const contactSeller = () => {
+    router.push('(tabs)/notifications');
+  }
+
+
+
+
+
+  // Function to calculate and return rating
+  const calculateRating = () => {
+    const reviews = product.reviews;
+    if (!reviews || reviews.length === 0) return 0;
+    const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
+    return (totalRating / reviews.length).toFixed(1); // Return rating rounded to 1 decimal
+  };
+  const rating = calculateRating();
+
+
+
+
+
+  //useEffect which fetches product data
   useEffect(() => {
     // Fetch data from the backend
-    axios.get(`http://10.10.24.163:3000/products/getProduct`, {
-        params: {productId}
+    axios.get(`http://192.168.43.3:3000/products/product`, {
+      params: { productId }
     }) // Change to your server URL
       .then(response => {
         setProduct(response.data);
@@ -47,104 +72,99 @@ export default function Page() {
   }, []);
 
 
+
+
+
+  //This is to wait until the data is recieved from the backend.
   if (loading) {
     return <LoadingIndicator />; // Show loading indicator while data is being fetched
   }
 
-  return (
 
-    <View className='flex-1 items-center justify-center'>
-        <Image source={{ uri: product.imageUrls[0].url }} style={{ width: 200, height: 200 }} />
-        <Text>{product.mainCategory}</Text>
-        <Text>{product.name}</Text>
-        <Text>{product.price}</Text>
-        {product.discount > 0 && (
-          <View>
-            <Text>{product.discount}%</Text>
+
+
+
+  return (
+    <SafeAreaView>
+    <ScrollView contentContainerStyle={{ flexGrow: 1 }} className=" p-0">
+      <View className="flex-1 items-center bg-white p-2">
+
+
+
+        {/* ImageDisplay */}
+        {product.imageUrls && product.imageUrls.length > 0 ? (
+          <Image
+          source={{ uri: product.imageUrls[0].url }}
+          className="w-[100vw] h-[50vh] object-cover mb-4 mt-10 border"
+        />
+        ) :
+        (
+          <Text className="text-center text-gray-500">No image found</Text>
+        )}
+
+      
+
+
+        {/* Name, Main Category, Sub Category */}
+        <Text className="text-2xl font-bold text-center">{product.name}</Text>
+        <Text className="text-sm text-gray-600 mb-1 text-center">{product.mainCategory}</Text>
+        <Text className="text-sm text-gray-600 mb-1 text-center">{product.category.name}</Text>
+
+
+
+
+        {/* StarRating and Sold Amount */}
+        <View className="flex-row items-center mb-2 mt-2">
+          <RatingDisplay rating={rating}/>  
+          <Text className="text-gray-500 text-center ml-2">|   {product.orderIds.length}+ sold</Text>
+        </View>
+
+
+
+
+
+        {/* PriceDisplay */}
+        <View className="flex-row items-center mb-2 mt-2">
+          <Text className="text-2xl font-bold text-green-700 mr-2">
+            ${discountPrice}
+          </Text>
+          <Text className="text-lg font-medium text-gray-500 line-through mr-2">
+            ${product.price}
+          </Text>
+          {product.discount > 0 && (
+          <View className="bg-red-200 p-0.5">
+            <Text className="text-red-700 text-center">{product.discount}% off</Text>
           </View>
         )}
-    </View>
-  )
+        </View>
+
+
+
+
+
+        {/* Description */}
+        <Text className="text-gray-600 mb-4 text-center text-sm">{product.description}</Text>
+
+
+
+
+        {/* Buttons */}
+        <View className="flex-row items-center">
+        <ButtonInProduct text="Add to Cart" onPress={goToCart} iconName="cart"/>
+        <ButtonInProduct text="Contact Seller" onPress={contactSeller} iconName="chat"/>
+        </View>
+      </View>
+
+      <View className="mb-5 mt-5">
+          <Reviews productId={productId}/>
+        </View>
+    </ScrollView>
+  
+    </SafeAreaView>
+  
+  );
 }
 
-const styles = StyleSheet.create({
-  card: {
-    width: 220,
-    height: 300,
-    backgroundColor: '#D1FAE5',
-    borderRadius: 8,
-    padding: 5,
-    marginBottom: 20,
-    elevation: 3,
-    marginRight: 10
-  },
-  header: {
-    position: 'relative',
-  },
-  discountTag: {
-    position: 'absolute',
-    top: 10,
-    left: 10,
-    backgroundColor: '#047857',
-    padding: 5,
-    borderRadius: 50,
-  },
-  discountText: {
-    color: '#fff',
-    fontSize: 16,
-    fontStyle: 'italic',
-  },
-  productImage: {
-    width: '100%',
-    height: 200,
-    borderRadius: 8,
-    resizeMode: 'cover',
-  },
-  actionIcons: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    position: 'absolute',
-    bottom: 10,
-    width: '100%',
-  },
-  productName: {
-    fontSize: 16,
-    fontWeight: '500',
-    marginTop: 10,
-    marginBottom: 5,
-  },
-  ratingAndSold: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: 5,
-  },
-  soldText: {
-    fontSize: 12,
-    color: '#6B7280',
-    marginLeft: 10,
-  },
-  priceContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  price: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: '#000',
-  },
-  strikedPrice: {
-    textDecorationLine: 'line-through',
-    fontSize: 14,
-    color: '#9CA3AF',
-    fontStyle: 'italic',
-  },
-  discountPrice: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: '#000',
-    marginLeft: 10,
-  },
-});
+
 
 //Create an account or Sign-In! {productId}

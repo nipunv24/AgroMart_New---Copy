@@ -55,30 +55,7 @@ const TabBar = ({ state, descriptors, navigation }) => {
           />
         )
 
-        // return (
-        //   <TouchableOpacity
-        //     key={route.name}
-        //     style={styles.tabbarItem}
-        //     accessibilityRole="button"
-        //     accessibilityState={isFocused ? { selected: true } : {}}
-        //     accessibilityLabel={options.tabBarAccessibilityLabel}
-        //     testID={options.tabBarTestID}
-        //     onPress={onPress}
-        //     onLongPress={onLongPress}
-        //   >
-        //     {
-        //         icons[route.name]({
-        //             color: isFocused? primaryColor: greyColor
-        //         })
-        //     }
-        //     <Text style={{ 
-        //         color: isFocused ? primaryColor : greyColor,
-        //         fontSize: 11
-        //     }}>
-        //       {label}
-        //     </Text>
-        //   </TouchableOpacity>
-        // );
+ 
       })}
     </View>
   )
@@ -93,10 +70,10 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        backgroundColor: 'white',
+        backgroundColor: '#f2f2f2',
         marginHorizontal: 0,
         paddingVertical: 8,
-        borderRadius: 15,
+        borderRadius: 0,
         borderCurve: 'continuous',
         shadowColor: 'black',
         shadowOffset: {width: 0, height: 10},

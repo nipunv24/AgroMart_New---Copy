@@ -16,7 +16,7 @@ const Home = () => {
 
   useEffect(() => {
     // Fetch data from the backend
-    axios.get(`http://10.10.24.163:3000/products`) // Change to your server URL
+    axios.get(`http://192.168.43.3:3000/products`) // Change to your server URL
       .then(response => {
         setProducts(response.data);
         setLoading(false); // Data has been fetched, stop loading
@@ -32,25 +32,23 @@ const Home = () => {
   }
 
   return (
-    <View className="flex-1 p-4" style={{ marginTop: '10%' }}>
+    <View className="flex-1 p-4">
       {/* Search input and Login button */}
       <View className="flex-row items-center justify-between mb-4">
         <View className='flex-row items-center w-4/5'>
-          {/* <TextInput 
-            className="w-4/5 rounded border p-2 underline text-lg mr-3"
-            placeholder="Search for products..." 
-            placeholderTextColor="#888" 
-          /> */}
+
+
           <TouchableOpacity 
           onPress={() => {
             // Navigate to the category page or perform an action
-            router.push('/categories/categories2'); // Adjust the route as needed
+            router.push('/categories/categories'); // Adjust the route as needed
           }}
           onPressIn={() => setIsPressed(true)} // Change color on press
           onPressOut={() => setIsPressed(false)} // Reset color on release
           activeOpacity={0.4}
           className={`flex-row items-center p-1  transition duration-200 ease-in-out transform ${isPressed ? 'scale-95' : 'scale-100'}`}
           >
+
             <Text 
                 className={` rounded p-2 text-lg mr-3 text-center underline`}
             >
@@ -60,7 +58,7 @@ const Home = () => {
           </TouchableOpacity>
         </View>
         <TouchableOpacity 
-          className="bg-green-500 rounded p-2"
+          className="bg-green-800 rounded p-2"
           onPress={() => router.push('(auth)/sign-in')}
         >
           <Text className="text-white font-bold ">Login</Text>
