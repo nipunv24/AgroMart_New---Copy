@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
 
-const CategoryDropdown = ({ categories, onSelectCategory }) => {
+const SubCategoryDropdown = ({ categories, onSelectCategory }) => {
   const [isOpen, setIsOpen] = useState(false); // To toggle the dropdown list
-  const [selectedCategory, setSelectedCategory] = useState('Select Category'); // To display selected category
+  const [selectedCategory, setSelectedCategory] = useState('Select Sub Category'); // To display selected category
 
   // Function to handle category selection
-  const handleCategorySelect = (categoryName) => {
+  const handleCategorySelect = (categoryName, categoryID) => {
     setSelectedCategory(categoryName);
     setIsOpen(false); // Close the dropdown after selecting
-    onSelectCategory(categoryName); //passing the categoryName to the parent component
+    onSelectCategory(categoryID); //passing the categoryName to the parent component
   };
 
   return (
@@ -25,8 +25,8 @@ const CategoryDropdown = ({ categories, onSelectCategory }) => {
           data={categories}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
-            <TouchableOpacity onPress={() => handleCategorySelect(item)} style={styles.item}>
-              <Text style={styles.itemText}>{item}</Text>
+            <TouchableOpacity onPress={() => handleCategorySelect(item.name, item.id)} style={styles.item}>
+              <Text style={styles.itemText}>{item.name}</Text>
             </TouchableOpacity>
           )}
           style={styles.list}
@@ -69,4 +69,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CategoryDropdown;
+export default SubCategoryDropdown;

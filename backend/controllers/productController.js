@@ -3,15 +3,42 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 // Get all categories
-export const getCategories = async (req, res) => {
+export const getSubCategories = async (req, res) => {
   try {
-    const categories = await prisma.category.findMany();
-    res.json(categories);
+    const subCategories = await prisma.category.findMany();
+    res.json(subCategories);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({ error: 'Error in fetching sub categories' });
   }
 };
+
+
+// Get all categories
+export const getCategories = async (req, res) => {
+  try {
+    const categories = await prisma.product.findMany({
+      select: {
+        mainCategory: true,
+      },
+      where: {
+        mainCategory: {
+          not: null, //Exclude null values
+        },
+      },
+      distinct: ['mainCategory']
+    });
+    const categoryNames = categories.map(product => product.mainCategory).filter(Boolean);
+    
+    res.json(categoryNames);
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error in fetching main category names' });
+  }
+};
+
+
 
 export const getDistricts = async (req, res) => {
   try {
@@ -77,13 +104,13 @@ export const searchProducts = async (req, res) => {
       where: {
         AND: [
           categoryId ? { categoryId } : {},
-          districtId ? { districtId } : {},
-          {
-            price: {
-              gte: minPrice || 0,
-              lte: maxPrice || Infinity,
-            },
-          },
+          // districtId ? { districtId } : {},
+          // {
+          //   price: {
+          //     gte: minPrice || 0,
+          //     lte: maxPrice || Infinity,
+          //   },
+          // },
         ],
       },
     });

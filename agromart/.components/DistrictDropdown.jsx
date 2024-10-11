@@ -31,7 +31,7 @@ const districtsOfSriLanka = [
 ];
 
 
-const DistrictDropdown = () => {
+const DistrictDropdown = ({onSelectDistrict}) => {
   const [isOpen, setIsOpen] = useState(false); // To toggle the dropdown list
   const [selectedDistrict, setSelectedDistrict] = useState('Select District'); // To display selected district
 
@@ -40,6 +40,7 @@ const DistrictDropdown = () => {
   const handleDistrictSelect = (districtName) => {
     setSelectedDistrict(districtName);
     setIsOpen(false); // Close the dropdown after selecting
+    onSelectDistrict(districtName); //Passing the selected district name to the parent component.
   };
 
 
