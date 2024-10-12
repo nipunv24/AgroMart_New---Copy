@@ -95,31 +95,8 @@ export const getProducts = async (req, res) => {
 
 
 
-// Search for products based on filters
-export const searchProducts = async (req, res) => {
-  const { categoryId, districtId, minPrice, maxPrice } = req.body;
 
-  try {
-    const products = await prisma.product.findMany({
-      where: {
-        AND: [
-          categoryId ? { categoryId } : {},
-          // districtId ? { districtId } : {},
-          // {
-          //   price: {
-          //     gte: minPrice || 0,
-          //     lte: maxPrice || Infinity,
-          //   },
-          // },
-        ],
-      },
-    });
-    res.json(products);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-};
+
 
 
 

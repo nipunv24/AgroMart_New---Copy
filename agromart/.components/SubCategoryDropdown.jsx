@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
   },
   list: {
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: 'green',
     borderRadius: 5,
     marginTop: 5,
     maxHeight: 150, // Ensure there's enough space for the dropdown

@@ -1,5 +1,6 @@
 import express from 'express';
-import { getProducts, getSubCategories, getCategories ,searchProducts, getProduct, getReviews, getDistricts  } from '../controllers/productController.js'; // Ensure to include .js if required
+import { getProducts, getSubCategories, getCategories ,getProduct, getReviews, getDistricts  } from '../controllers/productController.js'; // Ensure to include .js if required
+import { searchProducts } from '../controllers/searchController.js';
 
 const router = express.Router();
 

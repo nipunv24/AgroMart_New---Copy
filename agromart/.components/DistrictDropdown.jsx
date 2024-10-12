@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, FlatList, StyleSheet } from 'react-native
 
 
 const districtsOfSriLanka = [
+    "All",
     "Ampara",
     "Anuradhapura",
     "Badulla",

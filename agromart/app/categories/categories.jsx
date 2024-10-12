@@ -4,6 +4,7 @@ import axios from 'axios';
 import SubCategoryDropdown from '../../.components/SubCategoryDropdown';
 import DistrictDropdown from '../../.components/DistrictDropdown';
 import CategoryDropdown from '../../.components/CategoryDropdown';
+import ProductCard from '../../.components/ProductCard';
 
 const Categories = () => {
   const [subCategories, setSubCategories] = useState([]);
@@ -22,7 +23,8 @@ const Categories = () => {
     // Fetch data from the backend
     axios.get(`http://192.168.43.3:3000/products/subcategories`) // Change to your server URL
       .then(response => {
-        setSubCategories(response.data);
+        const fetchedSubCategories = response.data;
+        setSubCategories([{ id: 'all', name: 'All' }, ...fetchedSubCategories])
         setLoading(false); // Data has been fetched, stop loading
       })
       .catch(error => {
@@ -37,7 +39,8 @@ const Categories = () => {
     // Fetch data from the backend
     axios.get(`http://192.168.43.3:3000/products/categories`) // Change to your server URL
       .then(response => {
-        setCategories(response.data);
+        const fetchedCategories = response.data;
+        setCategories(['All', ...fetchedCategories]);
         setLoading(false); // Data has been fetched, stop loading
       })
       .catch(error => {
@@ -72,8 +75,9 @@ const Categories = () => {
   const handleSearch = async () => {
     try {
       const response = await axios.post('http://192.168.43.3:3000/products/search', {
-        categoryId: selectedSubCategoryIDDropdown,
-        districtId: selectedDistrict,
+        subCategoryId: selectedSubCategoryIDDropdown,
+        categoryName: selectedCategoryDropdown,
+        districtName: selectedDistrictDropdown,
         minPrice: parseInt(minPrice) || 0,
         maxPrice: parseInt(maxPrice) || Infinity,
       });
@@ -172,15 +176,22 @@ const Categories = () => {
     
 
       {/* Display Products */}
-      <View className="mt-5">
-        {products.map((product) => (
-          <View key={product.id}>
-            <Text>{product.name}</Text>
-            <Text>{product.price}</Text>
-            <Text>{product.description}</Text>
-          </View>
-        ))}
-      </View>
+      <FlatList
+        data={products}
+        keyExtractor={(item) => item.id} // Ensure the key is unique, convert to string if necessary
+        renderItem={({ item }) => (
+          // <View className="flex-1 m-1">
+          //     <Image source={{ uri: item.imageUrls[0].url }} className="w-full h-40 rounded-lg" />
+          //     <Text className="mt-2 font-semibold text-center">{item.name}</Text>
+          //     {/* <Text className="text-gray-600 text-center">{item.description}</Text> */}
+          // </View>
+          <ProductCard key={item.id} product={item}/>
+        )}
+        numColumns={2} // Ensure this value remains constant
+        columnWrapperStyle={{ justifyContent: 'space-between', paddingHorizontal: 0 }} // Add horizontal padding for spacing
+        contentContainerStyle={{ paddingBottom: 20 }} // Optional: Adds padding to the bottom of the list
+        key={products.length} // Using products.length to force a fresh render if products change
+      />
     </View>
   );
 };
