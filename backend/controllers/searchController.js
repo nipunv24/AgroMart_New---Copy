@@ -6,6 +6,9 @@ const prisma = new PrismaClient();
 // Search for products based on filters
 export const searchProducts = async (req, res) => {
     const { subCategoryId, categoryName, districtName, minPrice, maxPrice } = req.body;
+
+    const parsedMinPrice = isNaN(minPrice) ? 0 : minPrice;
+    const parsedMaxPrice = maxPrice === Infinity ? 100000 : maxPrice;
     
     let products = [];
 
@@ -16,6 +19,10 @@ export const searchProducts = async (req, res) => {
             where:{
                 mainCategory: categoryName,
                 categoryId: subCategoryId,
+                price: {
+                    gte: parsedMinPrice, // Greater than or equal to minPrice
+                    lte: parsedMaxPrice, // Less than or equal to maxPrice
+                },
             },
             include: {
               category: true,
@@ -28,6 +35,10 @@ export const searchProducts = async (req, res) => {
         products = await prisma.product.findMany({
             where:{
                 mainCategory: categoryName,
+                price: {
+                    gte: parsedMinPrice, // Greater than or equal to minPrice
+                    lte: parsedMaxPrice, // Less than or equal to maxPrice
+                },
             },
             include: {
                 category: true,
@@ -40,6 +51,10 @@ export const searchProducts = async (req, res) => {
         products = await prisma.product.findMany({
             where:{
                 categoryId: subCategoryId,
+                price: {
+                    gte: parsedMinPrice, // Greater than or equal to minPrice
+                    lte: parsedMaxPrice, // Less than or equal to maxPrice
+                },
             },
             include: {
                 category: true,
@@ -48,8 +63,14 @@ export const searchProducts = async (req, res) => {
         });
       } 
 
-      else if(districtName=="All" && categoryName=="All" && subCategoryId=="all"){
+      else if((districtName=="All") && categoryName=="All" && subCategoryId=="all"){
         products = await prisma.product.findMany({
+            where:{
+                price: {
+                    gte: parsedMinPrice, // Greater than or equal to minPrice
+                    lte: parsedMaxPrice, // Less than or equal to maxPrice
+                },
+            },
             include:{
                 category: true,
                 reviews: true
@@ -77,6 +98,10 @@ export const searchProducts = async (req, res) => {
                     },
                     categoryId: subCategoryId,
                     mainCategory: categoryName,
+                    price: {
+                        gte: parsedMinPrice, // Greater than or equal to minPrice
+                        lte: parsedMaxPrice, // Less than or equal to maxPrice
+                    },
                 },
                 include: {
                     category: true,
@@ -92,6 +117,10 @@ export const searchProducts = async (req, res) => {
                         in: storeIds,
                     },
                     mainCategory: categoryName,
+                    price: {
+                        gte: parsedMinPrice, // Greater than or equal to minPrice
+                        lte: parsedMaxPrice, // Less than or equal to maxPrice
+                    },
                 },
                 include: {
                     category: true,
@@ -107,6 +136,10 @@ export const searchProducts = async (req, res) => {
                         in: storeIds,
                     },
                     categoryId: subCategoryId,
+                    price: {
+                        gte: parsedMinPrice, // Greater than or equal to minPrice
+                        lte: parsedMaxPrice, // Less than or equal to maxPrice
+                    },
                 },
                 include: {
                     category: true,
@@ -120,6 +153,10 @@ export const searchProducts = async (req, res) => {
                 where:{
                     storeId: {
                         in: storeIds,
+                    },
+                    price: {
+                        gte: parsedMinPrice, // Greater than or equal to minPrice
+                        lte: parsedMaxPrice, // Less than or equal to maxPrice
                     },
                 },
                 include: {

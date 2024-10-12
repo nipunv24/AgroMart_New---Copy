@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
 
-const SubCategoryDropdown = ({ categories, onSelectCategory }) => {
+const SubCategoryDropdown = ({ categories, onSelectCategory , onSelectCategoryName}) => {
   const [isOpen, setIsOpen] = useState(false); // To toggle the dropdown list
   const [selectedCategory, setSelectedCategory] = useState('Select Sub Category'); // To display selected category
 
@@ -9,7 +9,9 @@ const SubCategoryDropdown = ({ categories, onSelectCategory }) => {
   const handleCategorySelect = (categoryName, categoryID) => {
     setSelectedCategory(categoryName);
     setIsOpen(false); // Close the dropdown after selecting
-    onSelectCategory(categoryID); //passing the categoryName to the parent component
+    onSelectCategory(categoryID); //passing the categoryID to the parent component
+    onSelectCategoryName(categoryName); //passing the category name to the parent component
+    console.log(categoryName);
   };
 
   return (

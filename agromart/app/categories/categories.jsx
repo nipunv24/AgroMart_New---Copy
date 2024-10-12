@@ -5,10 +5,12 @@ import SubCategoryDropdown from '../../.components/SubCategoryDropdown';
 import DistrictDropdown from '../../.components/DistrictDropdown';
 import CategoryDropdown from '../../.components/CategoryDropdown';
 import ProductCard from '../../.components/ProductCard';
+import { useRouter } from 'expo-router';
 
 const Categories = () => {
   const [subCategories, setSubCategories] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
   // const [districts, setDistricts] = useState([]); // Adjust if you have a District model
   // const [selectedCategory, setSelectedCategory] = useState('');
   // const [selectedSubCategory, setSelectedSubCategory] = useState('');
@@ -17,10 +19,12 @@ const Categories = () => {
   const [maxPrice, setMaxPrice] = useState('');
   const [products, setProducts] = useState([]);
 
+  //using router to send the filtered products as a parameter into the homepage.
+  const router = useRouter();
 
 
+    // Fetch subcategories from the backend
   useEffect(() => {
-    // Fetch data from the backend
     axios.get(`http://192.168.43.3:3000/products/subcategories`) // Change to your server URL
       .then(response => {
         const fetchedSubCategories = response.data;
@@ -50,45 +54,70 @@ const Categories = () => {
   }, []);
 
 
-  //Below logic handles the storing of the district name selected using the dropdown
-  const [selectedDistrictDropdown, setSelectedDistrictDropdown] = useState(''); // State for storing the selected district
-  const handleSelectDistrict = (district) => {
-    setSelectedDistrictDropdown(district); // Update the selected district
-    console.log(selectedDistrictDropdown);
-  };
+  
 
 
-  //Below logic handles the storing of the sub cateogory name selected using the dropdown.
-  const [selectedSubCategoryIDDropdown, setSelectedSubCategoryIDDropdown] = useState('');
-  const handleSubCategorySelect = (subCategoryName) => {
-    setSelectedSubCategoryIDDropdown(subCategoryName);
-  }
-
-
-   //Below logic handles the storing of the cateogory name selected using the dropdown.
-   const [selectedCategoryDropdown, setSelectedCategoryDropdown] = useState('');
-   const handleCategorySelect = (categoryName) => {
-     setSelectedCategoryDropdown(categoryName);
-   }
-
-
+  //This function will handle what happens after search is cliked. Basically it sends the recieved data into the homepage.
   const handleSearch = async () => {
+      // Check if category, subcategory, and district are selected
+    if (!selectedCategoryDropdown || selectedSubCategoryIDDropdown === '' || selectedDistrictDropdown === '') {
+      alert("Please select a category, subcategory, and district. Select All if you have no preference"); // Show an alert
+      return; // Exit the function early
+    }
     try {
       const response = await axios.post('http://192.168.43.3:3000/products/search', {
         subCategoryId: selectedSubCategoryIDDropdown,
         categoryName: selectedCategoryDropdown,
         districtName: selectedDistrictDropdown,
-        minPrice: parseInt(minPrice) || 0,
-        maxPrice: parseInt(maxPrice) || Infinity,
+        minPrice: parseFloat(minPrice) || 0,
+        maxPrice: parseFloat(maxPrice) || Infinity,
       });
       setProducts(response.data);
+      // Pass the filtered products and navigate to Home
+      router.push({
+        pathname: '/(tabs)/home',
+        params: { 
+          filteredProducts: JSON.stringify(response.data),
+          categoryName: selectedCategoryDropdown, //sending main category name to the homepage
+          districtName: selectedDistrictDropdown, //sending district name to the homepage
+          subCategoryName: selectedSubCategoryNameDropdown, //directly sending the sub category name into the homepage
+        },
+      });
     } catch (error) {
       console.error(error);
     }
   };
 
 
+  
+  //Below logic handles the storing of the district name selected using the dropdown. Refer line 138 and the functions in the related component.
+  const [selectedDistrictDropdown, setSelectedDistrictDropdown] = useState(''); // State for storing the selected district
+  const handleSelectDistrict = (district) => {
+    setSelectedDistrictDropdown(district); // Update the selected district
 
+  };
+
+
+  //Below logic handles the storing of the sub cateogory name and id selected using the dropdown. Refer line 131 and the functions in the related component.
+  const [selectedSubCategoryIDDropdown, setSelectedSubCategoryIDDropdown] = useState('');
+  const [selectedSubCategoryNameDropdown, setSelectedSubCategoryNameDropdown] = useState('');
+  const handleSubCategorySelect = (subCategoryName) => { //stores sub category ID
+    setSelectedSubCategoryIDDropdown(subCategoryName);
+  }
+  const handleSubCategoryNameSelect = (categoryName) =>{  //stores sub category name.
+      setSelectedSubCategoryNameDropdown(categoryName);
+  }
+
+
+   //Below logic handles the storing of the cateogory name selected using the dropdown. Refer line 124 and the functions in the related component.
+   const [selectedCategoryDropdown, setSelectedCategoryDropdown] = useState('');
+   const handleCategorySelect = (categoryName) => {
+     setSelectedCategoryDropdown(categoryName);
+    }
+   
+    if (loading) {
+      return <LoadingIndicator />; // Show loading indicator while data is being fetched
+    }
 
 
   return (
@@ -104,7 +133,7 @@ const Categories = () => {
 
       <View className='mt-5 mb-5'>
         <Text>Sub Category:</Text>
-        <SubCategoryDropdown categories={subCategories} onSelectCategory={handleSubCategorySelect}/>
+        <SubCategoryDropdown categories={subCategories} onSelectCategory={handleSubCategorySelect} onSelectCategoryName={handleSubCategoryNameSelect}/>
       </View>
 
 
@@ -167,7 +196,7 @@ const Categories = () => {
       {selectedDistrictDropdown ? (
         <Text>Selected District: {selectedDistrictDropdown}</Text>
       ) : (
-        <Text>No district selected yet.</Text>
+        <Text>Selected District: {selectedDistrictDropdown}</Text>
       )}
       </View>
 

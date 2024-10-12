@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Image, FlatList, TextInput, TouchableOpacity } from 'react-native';
 import axios from 'axios';
-import { useRouter } from 'expo-router';
+import { useRouter, useLocalSearchParams, useGlobalSearchParams } from 'expo-router';
 import LoadingIndicator from '../../.components/LoadingIndicator'; // Import the LoadingIndicator component
 import { icons } from '../../constants/vectorIcons';
 import ProductCard from '../../.components/ProductCard';
@@ -11,21 +11,31 @@ import ProductCard from '../../.components/ProductCard';
 const Home = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true); // State to track loading status
+  const [filteredRecieved, setfilteredRecieved] = useState(false); //This state variable store the state to check if filtered products were searched
   const [isPressed, setIsPressed] = React.useState(false); //For the button to show green colour
   const router = useRouter();
+  const { filteredProducts, categoryName, districtName, subCategoryName } = useLocalSearchParams(); // Use to retrieve passed 
 
   useEffect(() => {
-    // Fetch data from the backend
-    axios.get(`http://192.168.43.3:3000/products`) // Change to your server URL
-      .then(response => {
-        setProducts(response.data);
-        setLoading(false); // Data has been fetched, stop loading
-      })
-      .catch(error => {
-        console.error('Failed to fetch products:', error);
-        setLoading(false); // Stop loading even if there's an error
-      });
-  }, []);
+    if(filteredProducts){
+      setProducts(JSON.parse(filteredProducts));
+      setLoading(false);
+      setfilteredRecieved(true);
+      console.log("products:"+products);
+      console.log(products.length);
+    }
+    else {
+      axios.get(`http://192.168.43.3:3000/products`) 
+        .then(response => {
+          setProducts(response.data);
+          setLoading(false);
+        })
+        .catch(error => {
+          console.error('Failed to fetch products:', error);
+          setLoading(false);
+        });
+    }
+  }, [filteredProducts]);
 
   if (loading) {
     return <LoadingIndicator />; // Show loading indicator while data is being fetched
@@ -36,7 +46,7 @@ const Home = () => {
       {/* Search input and Login button */}
       <View className="flex-row items-center justify-between mb-4">
         <View className='flex-row items-center w-4/5'>
-
+          
 
           <TouchableOpacity 
           onPress={() => {
@@ -64,6 +74,22 @@ const Home = () => {
           <Text className="text-white font-bold ">Login</Text>
         </TouchableOpacity>
       </View>
+
+      {filteredRecieved ? (
+        products.length === 0 ? (
+          <View className="flex-1 items-center justify-center">
+            <Text className="text-lg text-center text-red-700 font-semibold mt-4">
+              Sorry. No products found! Check other filters.
+            </Text>
+          </View>
+        ) : (
+          <Text className="text-lg font-bold text-gray-800 mb-5">
+            <Text className="text-green-600">Category: </Text>{categoryName} {"\n"}
+            <Text className="text-green-600">SubCategory: </Text>{subCategoryName} {"\n"}
+            <Text className="text-green-600">District: </Text>{districtName}
+          </Text>
+        )
+      ) : null}
 
       <FlatList
         data={products}
