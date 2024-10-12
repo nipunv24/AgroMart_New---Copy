@@ -5,6 +5,7 @@ import SubCategoryDropdown from '../../.components/SubCategoryDropdown';
 import DistrictDropdown from '../../.components/DistrictDropdown';
 import CategoryDropdown from '../../.components/CategoryDropdown';
 import ProductCard from '../../.components/ProductCard';
+import LoadingIndicator from '../../.components/LoadingIndicator';
 import { useRouter } from 'expo-router';
 
 const Categories = () => {
