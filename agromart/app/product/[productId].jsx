@@ -1,6 +1,6 @@
 import { SignedIn, SignedOut, useUser } from '@clerk/clerk-expo';
 import { Link } from 'expo-router';
-import { Text, View, Image, ScrollView, Dimensions, SafeAreaView } from 'react-native';
+import { Text, View, Image, ScrollView, Dimensions, SafeAreaView, Platform } from 'react-native';
 import { useLocalSearchParams, useRouter} from 'expo-router';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
@@ -22,6 +22,11 @@ export default function Page() {
 
   //Getting Discount Price
   const discountPrice = (product.price - (product.price * product.discount) / 100).toFixed(2);
+
+
+  // Get screen dimensions
+const screenWidth = Dimensions.get('window').width;
+const screenHeight = Dimensions.get('window').height;
 
 
   //Function to redirect to cart page when "Add to Cart" button is clicked.
@@ -95,7 +100,13 @@ export default function Page() {
         {product.imageUrls && product.imageUrls.length > 0 ? (
           <Image
           source={{ uri: product.imageUrls[0].url }}
-          className="w-[100vw] h-[50vh] object-cover mb-4 mt-10 border"
+          style={{
+            width: screenWidth, // Set the image width to match the screen width
+            height: Platform.OS === 'ios' ? 300 : screenHeight*0.4, // Set a fixed height based on platform
+            resizeMode: 'cover', // Ensure the image covers the area
+             // Optional: add a border radius for nicer lookcreenWidth, height: screenHeight * 0.4 }}
+          }}
+          className="mb-4 mt-10"
         />
         ) :
         (

@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, FlatList, TextInput, TouchableOpacity, Animated, SafeAreaView } from 'react-native';
+import { View, Text, Image, FlatList, TextInput, TouchableOpacity, Animated, SafeAreaView, Dimensions, Platform } from 'react-native';
 import axios from 'axios';
 import { useRouter, useLocalSearchParams, useGlobalSearchParams } from 'expo-router';
 import LoadingIndicator from '../../.components/LoadingIndicator'; // Import the LoadingIndicator component
@@ -38,6 +38,9 @@ const Home = () => {
     }
   }, [filteredProducts]);
 
+  // Get screen dimensions
+const screenWidth = Dimensions.get('window').width;
+const screenHeight = Dimensions.get('window').height;
 
 
   if (loading) {
@@ -45,7 +48,14 @@ const Home = () => {
   }
 
   return (
-    <SafeAreaView className="flex-1 p-4">
+    <SafeAreaView 
+    className="flex-1"
+    style={{
+      paddingHorizontal: screenWidth * 0.04, // 4% of screen width as padding
+      paddingVertical: Platform.OS === 'android' ? 20 : screenHeight*0.04,
+      marginHorizontal: Platform.OS === 'android' ? 0 : screenWidth * 0.04
+    }}
+    >
       {/* Search input and Login button */}
       <View className="flex-row items-center justify-between mb-4 mt-4">
         <View className='flex-row items-center'>
@@ -82,7 +92,7 @@ const Home = () => {
           <ProductCard key={item.id} product={item} />
         )}
         numColumns={2} // Ensure this value remains constant
-        columnWrapperStyle={{ justifyContent: 'space-between', paddingHorizontal: 0 }} // Add horizontal padding for spacing
+        columnWrapperStyle={{ justifyContent: 'space-between', paddingHorizontal:0 }} // Add horizontal padding for spacing
         contentContainerStyle={{ paddingBottom: 20 }} // Optional: Adds padding to the bottom of the list
         key={products.length} // Using products.length to force a fresh render if products change
       />

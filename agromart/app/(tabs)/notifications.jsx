@@ -11,35 +11,36 @@
 // };
 // export default Cart;
 
-import { SignedIn, SignedOut, useUser } from '@clerk/clerk-expo'
-import { Link } from 'expo-router'
-import { Text, View,TouchableOpacity } from 'react-native'
+//import { SignedIn, SignedOut, useUser } from '@clerk/clerk-expo'
+//import { Link } from 'expo-router'
+import { Text, View,TouchableOpacity, SafeAreaView } from 'react-native'
 
-export default function Page() {
-  const { user } = useUser()
-
-  return (
-    <View>
-      <SignedIn>
-        <Text>Hello {user?.emailAddresses[0].emailAddress}</Text>
-      </SignedIn>
-      <SignedOut>
-        <View className="items-center justify-center p-6" style={{ marginTop: '50%' }}>
-          <Text className="text-2xl font-bold text-center mb-8">
-            Create an account or Sign-In!
-          </Text>
-          <Link href="/(auth)/sign-in" asChild>
-            <TouchableOpacity className="bg-green-500 py-2 px-8 mt-4 rounded-full mb-4 w-full h-14 justify-center" activeOpacity={0.9}>
-              <Text className="text-white text-lg font-semibold text-center">Sign In</Text>
-            </TouchableOpacity>
-          </Link>
-          <Link href="/(auth)/sign-up" asChild>
-            <TouchableOpacity className="bg-green-600 py-2 px-16 mt-8 rounded-full w-full h-14 justify-center" activeOpacity={0.9}>
-              <Text className="text-white text-lg font-semibold text-center">Sign Up</Text>
-            </TouchableOpacity>
-          </Link>
+  const Notifications = () => {
+    return (
+      <SafeAreaView className="flex-1 p-4 mt-5">
+        <Text className="text-2xl font-bold mb-4">Notifications</Text>
+      <View className="flex-1">
+        {/* Sample notifications */}
+        <View className="border-b border-gray-300 py-2">
+          <Text className="text-lg font-semibold">New Message</Text>
+          <Text className="text-gray-600">You have a new message from store 1.</Text>
+          <Text className="text-sm text-gray-400">2 hours ago</Text>
         </View>
-      </SignedOut>
-    </View>
-  )
-}
+        <View className="border-b border-gray-300 py-2">
+          <Text className="text-lg font-semibold">Order Shipped</Text>
+          <Text className="text-gray-600">Your order #100592564897 has been shipped and is on its way!</Text>
+          <Text className="text-sm text-gray-400">3 hours ago</Text>
+        </View>
+        <View className="border-b border-gray-300 py-2">
+          <Text className="text-lg font-semibold">Reminder</Text>
+          <Text className="text-gray-600">Don't forget to review your recent purchases.</Text>
+          <Text className="text-sm text-gray-400">2 days ago</Text>
+        </View>
+
+        {/* Add more notifications as needed */}
+      </View>
+      </SafeAreaView>
+    );
+  };
+
+export default Notifications;

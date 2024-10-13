@@ -13,33 +13,32 @@
 
 import { SignedIn, SignedOut, useUser } from '@clerk/clerk-expo'
 import { Link } from 'expo-router'
-import { Text, View,TouchableOpacity } from 'react-native'
+import { Text, View,TouchableOpacity, SafeAreaView} from 'react-native'
 
-export default function Page() {
-  const { user } = useUser()
-
+const Cart = () => {
   return (
-    <View>
-      <SignedIn>
-        <Text>Hello {user?.emailAddresses[0].emailAddress}</Text>
-      </SignedIn>
-      <SignedOut>
-        <View className="items-center justify-center p-6" style={{ marginTop: '50%' }}>
-          <Text className="text-2xl font-bold text-center mb-8">
-            Create an account or Sign-In!
-          </Text>
-          <Link href="/(auth)/sign-in" asChild>
-            <TouchableOpacity className="bg-green-500 py-2 px-8 mt-4 rounded-full mb-4 w-full h-14 justify-center" activeOpacity={0.9}>
-              <Text className="text-white text-lg font-semibold text-center">Sign In</Text>
-            </TouchableOpacity>
-          </Link>
-          <Link href="/(auth)/sign-up" asChild>
-            <TouchableOpacity className="bg-green-600 py-2 px-16 mt-8 rounded-full w-full h-14 justify-center" activeOpacity={0.9}>
-              <Text className="text-white text-lg font-semibold text-center">Sign Up</Text>
-            </TouchableOpacity>
-          </Link>
+    <SafeAreaView className="flex-1 p-4 mt-5">
+      <Text className="text-2xl font-bold">Shopping Cart</Text>
+      <View className="flex-1">
+        {/* Sample cart items */}
+        <View className="border-b border-gray-300 py-2">
+          <Text className="text-lg">Tomatoes 1kg</Text>
+          <Text className="text-gray-600">Quantity: 1</Text>
         </View>
-      </SignedOut>
-    </View>
-  )
-}
+        <View className="border-b border-gray-300 py-2">
+          <Text className="text-lg">Lettuce</Text>
+          <Text className="text-gray-600">Quantity: 2</Text>
+        </View>
+        <View className="flex-row justify-between mt-4">
+          <Text className="text-lg font-bold">Total:</Text>
+          <Text className="text-lg font-bold">$62.00</Text>
+        </View>
+        <TouchableOpacity className="bg-green-800 rounded p-2 mt-4">
+          <Text className="text-white font-bold text-center">Checkout</Text>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
+  );
+};
+
+export default Cart;
