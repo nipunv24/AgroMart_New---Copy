@@ -5,7 +5,7 @@ import React, { useState, useCallback } from 'react';
 import { Image } from 'react-native';
 import { images } from '../../constants';
 
-export default function Page() {
+export default function SignInScreen() {
   const { signIn, setActive, isLoaded } = useSignIn();
   const router = useRouter();
 

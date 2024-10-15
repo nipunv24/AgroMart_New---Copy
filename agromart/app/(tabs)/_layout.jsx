@@ -2,9 +2,14 @@ import { Tabs } from 'expo-router';
 import TabBar from "../../.components/TabBar";
 import { SafeAreaView } from 'react-native';
 
+
+
 export default function _layout() {
+
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <>
+
+      <SafeAreaView style={{ flex: 1 }}>
       <Tabs
         screenOptions={{
           headerShown: false, // Hide the default tab header (the one showing `(tabs)`)
@@ -44,6 +49,7 @@ export default function _layout() {
           }}
         />
       </Tabs>
-    </SafeAreaView>
+      </SafeAreaView>
+    </>
   );
 }

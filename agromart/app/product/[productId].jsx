@@ -63,7 +63,7 @@ const screenHeight = Dimensions.get('window').height;
   //useEffect which fetches product data
   useEffect(() => {
     // Fetch data from the backend
-    axios.get(`http://192.168.43.3:3000/products/product`, {
+    axios.get(`http://192.168.8.178:3000/products/product`, {
       params: { productId }
     }) // Change to your server URL
       .then(response => {

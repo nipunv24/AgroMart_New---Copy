@@ -16,3 +16,4 @@ export default function AuthRoutesLayout() {
     </Stack>
   );
 }
+
