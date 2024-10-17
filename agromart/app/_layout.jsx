@@ -24,6 +24,7 @@ export default function _layout() {
                 >
                     <Stack.Screen name="index" />
                     <Stack.Screen name="(tabs)" />
+                    
                     {/* Use just the path for the ProductDetails screen 
                     <Stack.Screen name="product/:id" />*/}
                 </Stack>

@@ -1,13 +1,16 @@
 
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, FlatList, TextInput, TouchableOpacity, Animated, SafeAreaView, Dimensions, Platform } from 'react-native';
+import { View, Text, Image, FlatList, TextInput, TouchableOpacity, Animated, SafeAreaView, Dimensions, Platform, Button } from 'react-native';
 import axios from 'axios';
-import { useRouter, useLocalSearchParams, useGlobalSearchParams } from 'expo-router';
+import { useRouter, useLocalSearchParams, useGlobalSearchParams, Link } from 'expo-router';
 import LoadingIndicator from '../../.components/LoadingIndicator'; // Import the LoadingIndicator component
 import { icons } from '../../constants/vectorIcons';
 import ProductCard from '../../.components/ProductCard';
 import ShiningBrowsebyCategory from '../../.components/ShiningBrowsebyCategoryButton';
 //import { DOMAIN_URL } from '@env'; // Import DOMAIN_URL from .env
+
+import { SignedIn, SignedOut,useUser } from '@clerk/clerk-expo';
+
 
 const Home = () => {
   const [products, setProducts] = useState([]);
@@ -17,7 +20,13 @@ const Home = () => {
   const router = useRouter();
   const { filteredProducts, categoryName, districtName, subCategoryName } = useLocalSearchParams(); // Use to retrieve passed 
 
+  const user = useUser();
+
+  console.log("User = ; ",user)
+
   useEffect(() => {
+
+
     if(filteredProducts){
       setProducts(JSON.parse(filteredProducts));
       setLoading(false);
@@ -26,7 +35,7 @@ const Home = () => {
       console.log(products.length);
     }
     else {
-      axios.get(`http://192.168.43.3:3000/products`) 
+      axios.get(`http://192.168.8.178:3000/products`) 
         .then(response => {
           setProducts(response.data);
           setLoading(false);
@@ -48,6 +57,8 @@ const screenHeight = Dimensions.get('window').height;
   }
 
   return (
+    <>
+    <SignedIn>
     <SafeAreaView 
     className="flex-1"
     style={{
@@ -97,6 +108,16 @@ const screenHeight = Dimensions.get('window').height;
         key={products.length} // Using products.length to force a fresh render if products change
       />
     </SafeAreaView>
+    </SignedIn>
+    <SignedOut>
+      <View className='mt-20 bg-green-400 p-1 text-lg items-center'>
+
+        <Link href='/(auth)/sign-in'>
+          sign in 
+        </Link>
+      </View>
+    </SignedOut>
+    </>
   );
 };
 

@@ -11,11 +11,31 @@
 // };
 // export default Cart;
 
-import { SignedIn, SignedOut, useUser } from '@clerk/clerk-expo'
-import { Link } from 'expo-router'
+import { useAuth } from '@clerk/clerk-expo';
+import { Link,useRouter } from 'expo-router'
+import { useState } from 'react';
 import { Text, View,TouchableOpacity,SafeAreaView, Image } from 'react-native'
+import { SignedIn, SignedOut,useUser } from '@clerk/clerk-expo';
 
 const Profile = () => {
+
+  const {signOut } = useAuth();
+  const [isLoading,setIsloading]= useState();
+  const router = useRouter();
+
+  const handleSignOut = async () => {
+    setIsloading(true)
+    try {
+      await signOut(); // Call the signOut method
+      // Optionally, navigate to a sign-in screen or show a success message
+    } catch (err) {
+      console.error('Error signing out:', err); // Handle errors if any
+    }
+    setIsloading(false)
+    router.push("/(auth)/sign-in")
+  };
+
+
   return (
     <SafeAreaView className="flex-1 p-4 mt-5">
       <Text className="text-2xl font-bold mb-4">My Profile</Text>
@@ -46,7 +66,7 @@ const Profile = () => {
 
 
         {/* Logout Button */}
-        <TouchableOpacity className="bg-red-600 rounded p-2 mt-4">
+        <TouchableOpacity disabled={isLoading} className="bg-red-600 rounded p-2 mt-4" onPress={handleSignOut}>
           <Text className="text-white font-bold text-center">Logout</Text>
         </TouchableOpacity>
       </View>

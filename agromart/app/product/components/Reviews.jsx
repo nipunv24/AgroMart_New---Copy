@@ -16,7 +16,7 @@ const Reviews = ({productId}) => {
 
     useEffect(() => {
         // Fetch data from the backend
-        axios.get(`http://192.168.43.3:3000/products/reviews`, {
+        axios.get(`http://192.168.8.178:3000/products/reviews`, {
           params: { productId }
         }) // Change to your server URL
           .then(response => {

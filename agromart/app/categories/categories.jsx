@@ -20,7 +20,7 @@ const Categories = () => {
   const router = useRouter();
 
   useEffect(() => {
-    axios.get(`http://192.168.43.3:3000/products/subcategories`)
+    axios.get(`http://192.168.8.178:3000/products/subcategories`)
       .then(response => {
         const fetchedSubCategories = response.data;
         setSubCategories([{ id: 'all', name: 'All' }, ...fetchedSubCategories]);
@@ -51,7 +51,7 @@ const Categories = () => {
       return;
     }
     try {
-      const response = await axios.post('http://192.168.43.3:3000/products/search', {
+      const response = await axios.post('http://192.168.8.178:3000/products/search', {
         subCategoryId: selectedSubCategoryIDDropdown,
         categoryName: selectedCategoryDropdown,
         districtName: selectedDistrictDropdown,

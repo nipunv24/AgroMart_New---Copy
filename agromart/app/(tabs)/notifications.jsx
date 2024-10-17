@@ -11,7 +11,7 @@
 // };
 // export default Cart;
 
-//import { SignedIn, SignedOut, useUser } from '@clerk/clerk-expo'
+import { SignedIn, SignedOut, useUser } from '@clerk/clerk-expo'
 //import { Link } from 'expo-router'
 import { Text, View,TouchableOpacity, SafeAreaView } from 'react-native'
 

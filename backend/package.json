@@ -1,4 +1,9 @@
 {
+  "scripts": {
+  "start": "node index.js",
+  "nodemon": "nodemon index.js"
+  },
+
   "type": "module",
   "dependencies": {
     "@prisma/client": "^5.19.1",
